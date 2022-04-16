@@ -4,10 +4,11 @@ using VRM;
 
 public class GenerateBlendshapesWindow : EditorWindow
 {
-    [MenuItem("Fruity Tools/Blendshapes Generator")]
+    [MenuItem("Fruity Tools/Fruity Blendshapes Generator")]
     static void BlendshapesGenerator()
     {
         GenerateBlendshapesWindow window = (GenerateBlendshapesWindow)GetWindow(typeof(GenerateBlendshapesWindow));
+        window.titleContent.text = "Fruity Blendshapes Generator";
         window.Show();
     }
 
@@ -16,6 +17,12 @@ public class GenerateBlendshapesWindow : EditorWindow
 
     public void OnGUI()
     {
+        GUILayout.Label("VRM Mesh", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginHorizontal();
+        selectedMesh = (Mesh)EditorGUILayout.ObjectField(selectedMesh, typeof(Mesh), true);
+        EditorGUILayout.EndHorizontal();
+
         GUILayout.Label("VRM Prefab", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginHorizontal();
@@ -24,11 +31,14 @@ public class GenerateBlendshapesWindow : EditorWindow
 
         if (GUILayout.Button("Generate Blendshapes!"))
         {
+            if (!AssetDatabase.IsValidFolder("Assets/NewBlendShapes"))
+            {
+                AssetDatabase.CreateFolder("Assets", "NewBlendShapes");
+            }
+
             int blendshapeCount = selectedMesh.blendShapeCount;
 
             BlendShapeAvatar newAvatar = CreateInstance<BlendShapeAvatar>();
-
-            AssetDatabase.CreateFolder("Assets", "NewBlendShapes");
 
             for (int i = 0; i < blendshapeCount; i++)
             {
